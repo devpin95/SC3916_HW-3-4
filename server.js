@@ -3,10 +3,12 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
+var cors = require("cors");
 var jwt = require('jsonwebtoken');
 
 var app = express();
 module.exports = app; // for testing
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
