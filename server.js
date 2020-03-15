@@ -89,7 +89,7 @@ router.post('/signin', function(req, res) {
                 res.json({success: true, token: 'JWT ' + token});
             }
             else {
-                res.status(401).send({success: false, message: 'Authentication failed.'});
+                res.status(401).send({success: false, message: 'Authentication failed.', name: req.body.username, password: req.body.password});
             }
         });
 
