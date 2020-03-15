@@ -80,8 +80,8 @@ router.post('/signin', function(req, res) {
     userNew.password = req.body.password;
 
     User.findOne({ username: userNew.username }).select('name username password').exec(function(err, user) {
-        // if (err) res.send(err);
-        if (err) res.send({success: false, message: 'This is where it failed.', name: req.body.username, password: req.body.password});
+        res.send({success: false, message: 'This is a test', name: req.body.username, password: req.body.password})
+        if (err) res.send(err);
 
         user.comparePassword(userNew.password, function(isMatch){
             if (isMatch) {
