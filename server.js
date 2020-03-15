@@ -98,5 +98,39 @@ router.post('/signin', function(req, res) {
     });
 });
 
+router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
+    res.json({
+        status: 200,
+        message: "GET movies",
+        headers: req.headers,
+        query: Object.keys(req.query).length === 0 ? null : req.query,
+        env: process.env.SECRET_KEY
+    });
+}).post('/movies',authJwtController.isAuthenticated, function(req, res) {
+    res.json({
+        status: 200,
+        message: "movie saved",
+        headers: req.headers,
+        query: Object.keys(req.query).length === 0 ? null : req.query,
+        env: process.env.SECRET_KEY
+    });
+}).put('/movies', authJwtController.isAuthenticated, function(req, res) {
+    res.json({
+        status: 200,
+        message: "movie updated",
+        headers: req.headers,
+        query: Object.keys(req.query).length === 0 ? null : req.query,
+        env: process.env.SECRET_KEY
+    });
+}).delete('/movies', authJwtController.isAuthenticated, function(req, res) {
+    res.json({
+        status: 200,
+        message: "movie deleted",
+        headers: req.headers,
+        query: Object.keys(req.query).length === 0 ? null : req.query,
+        env: process.env.SECRET_KEY
+    });
+});
+
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
