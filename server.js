@@ -5,6 +5,7 @@ var authJwtController = require('./auth_jwt');
 var User = require('./Users');
 var cors = require("cors");
 var jwt = require('jsonwebtoken');
+var bcrypt = require('bcrypt-nodejs');
 
 var app = express();
 module.exports = app; // for testing
@@ -79,8 +80,12 @@ router.post('/signin', function(req, res) {
     userNew.username = req.body.username;
     userNew.password = req.body.password;
 
+    bcrypt.hash(req.body.password, null, null, function(err, hash) {
+        // change the password to the hashed version
+        userNew.password = hash;
+    });
+
     User.findOne({ username: userNew.username }).select('name username password').exec(function(err, user) {
-        res.send({success: false, message: 'This is a test', name: req.body.username, password: req.body.password})
         if (err) res.send(err);
 
         user.comparePassword(userNew.password, function(isMatch){
