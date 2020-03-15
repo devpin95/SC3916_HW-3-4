@@ -80,7 +80,7 @@
       <workItem from="1520308174902" duration="3305000" />
       <workItem from="1551740823482" duration="6733000" />
       <workItem from="1583366720559" duration="1816000" />
-      <workItem from="1584228151873" duration="3979000" />
+      <workItem from="1584228151873" duration="7264000" />
     </task>
     <servers />
   </component>
@@ -88,6 +88,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584250313036">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1584250313036" />
     <state width="1259" height="199" key="GridCell.Tab.0.bottom" timestamp="1583369957720">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
