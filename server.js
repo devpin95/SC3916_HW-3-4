@@ -79,11 +79,7 @@ router.post('/signin', function(req, res) {
     userNew.name = req.body.name;
     userNew.username = req.body.username;
     userNew.password = req.body.password;
-
-    bcrypt.hash(req.body.password, null, null, function(err, hash) {
-        // change the password to the hashed version
-        userNew.password = hash;
-    });
+    res.send({username: userNew.username, passport: userNew.password});
 
     User.findOne({ username: userNew.username }).select('name username password').exec(function(err, user) {
         if (err) res.send(err);
