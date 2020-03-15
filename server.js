@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
+var Movie = require('./Movies');
 var cors = require("cors");
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt-nodejs');
@@ -99,13 +100,18 @@ router.post('/signin', function(req, res) {
 });
 
 router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
-    res.json({
-        status: 200,
-        message: "GET movies",
-        headers: req.headers,
-        query: Object.keys(req.query).length === 0 ? null : req.query,
-        env: process.env.SECRET_KEY
-    });
+    // res.json({
+    //     status: 200,
+    //     message: "GET movies",
+    //     headers: req.headers,
+    //     query: Object.keys(req.query).length === 0 ? null : req.query,
+    //     env: process.env.SECRET_KEY
+    // });
+    var query = Object.keys(req.query).length === 0 ? null : req.query;
+
+    var movies = new Movie();
+    res.json(Movie.find());
+
 }).post('/movies',authJwtController.isAuthenticated, function(req, res) {
     res.json({
         status: 200,
