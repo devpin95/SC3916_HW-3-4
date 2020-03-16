@@ -116,7 +116,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
         res.json(movies);
     }));
 
-}).post('/movies',authJwtController.isAuthenticated, function(req, res) {
+}).post('/movies', authJwtController.isAuthenticated, function(req, res) {
     // res.json({
     //     status: 200,
     //     message: "movie saved",
@@ -125,19 +125,44 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     //     env: process.env.SECRET_KEY
     // });
     var query = Object.keys(req.query).length === 0 ? null : req.query;
-    res.json(query);
-    // if ( !query.hasOwnProperty("title") ) {
-    //     res.send({ success: false, message: "Must include movie title" });
-    // }
-    // else if ( !query.hasOwnProperty("genre") ) {
-    //     res.send({ success: false, message: "Must include movie genre" });
-    // }
-    // else if ( !query.hasOwnProperty("releasedate") ) {
-    //     res.send({ success: false, message: "Must include movie release date" });
-    // }
-    // else if ( !query.hasOwnProperty("actors") ) {
-    //     res.send({ success: false, message: "Must include movie actors" });
-    // }
+    // res.json(query);
+
+    if ( !query.hasOwnProperty("title") ) {
+        res.send({ success: false, message: "Must include movie title" });
+    }
+    else if ( !query.hasOwnProperty("genre") ) {
+        res.send({ success: false, message: "Must include movie genre" });
+    }
+    else if ( !query.hasOwnProperty("releasedate") ) {
+        res.send({ success: false, message: "Must include movie release date" });
+    }
+    else if ( !query.hasOwnProperty("actors") ) {
+        res.send({ success: false, message: "Must include movie actors" });
+    }
+    else if ( !query.hasOwnProperty("characters") ) {
+        res.send({ success: false, message: "Must include movie characters" });
+    }
+
+    var movie = new Movie();
+    movie.title = query.title;
+    movie.genre = query.genre;
+    movie.releasedate = new Date(query.releasedate);
+
+    for ( let i = 0; i < query.actors.length; ++i ) {
+        movie.actors.push({ actor: query.actors[i], character: query.characters[i] })
+    }
+
+    movie.save(function(err) {
+        if (err) {
+            // duplicate entry
+            if (err.code == 11000)
+                return res.json({ success: false, message: 'A user with that username already exists. '});
+            else
+                return res.send(err);
+        }
+
+        res.json({ success: true, message: movie.title + ' Added!' });
+    });
 
 }).put('/movies', authJwtController.isAuthenticated, function(req, res) {
     res.json({

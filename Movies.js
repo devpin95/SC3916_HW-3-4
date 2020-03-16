@@ -9,20 +9,11 @@ mongoose.set('useCreateIndex', true);
 
 // user schema
 var MovieSchema = new Schema({
-    title: String,
+    title: {type: String, index: { unique: true }},
     releasedate: { type: Date, required: true, default: Date.now },
     genre: String,
     actors: [{name: String, character: String}]
 });
-
-
-// UserSchema.methods.comparePassword = function(password, callback) {
-//     var user = this;
-//
-//     bcrypt.compare(password, user.password, function(err, isMatch) {
-//         callback(isMatch) ;
-//     });
-// };
 
 // return the model
 module.exports = mongoose.model('Movie', MovieSchema);
