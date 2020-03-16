@@ -187,7 +187,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     if ( !query.hasOwnProperty("title") ) {
         res.send({ success: false, message: "Must include movie title to be deleted" });
     } else {
-        Movie.deleteOne({title: query.title}, function(err) {
+        Movie.deleteOne({title: query.title}, function(err, json) {
             if (err) {
                 return res.send(err);
                 // // duplicate entry
@@ -197,7 +197,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                 //     return res.send(err);
             }
 
-            res.json({ success: true, message: query.title + ' Deleted!' });
+            res.json({ success: true, message: query.title + ' Deleted!' , result: json});
         })
     }
 });
