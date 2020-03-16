@@ -196,7 +196,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
         Movie.update({title: query.title}, diff, function( err, json ) {
             if (err) return res.send(err);
 
-            return res.json({ success: true, message: movie.title + ' Added!', json });
+            return res.json({ success: true, message: query.title + ' updated!', json });
         });
     }
 
