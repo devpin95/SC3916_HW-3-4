@@ -109,11 +109,19 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     // });
     var query = Object.keys(req.query).length === 0 ? null : req.query;
 
-    Movie.find(function(err, movies) {
-        if (err) res.send(err);
-        // return the users
-        res.json(movies);
-    });
+    if ( query.hasOwnProperty("title") ) {
+        Movie.find(function(err, movies) {
+            if (err) res.send(err);
+            // return the users
+            res.json(movies);
+        });
+    } else {
+        Movie.find({title: query.title}, function(err, movies) {
+            if (err) res.send(err);
+            // return the users
+            res.json(movies);
+        });
+    }
 
 }).post('/movies', authJwtController.isAuthenticated, function(req, res) {
     // res.json({
@@ -232,7 +240,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
             // Should we tell the user that their call was the one to delete the document?
             // or just that the delete was enacted and the document is no longer present
             res.status(204);
-            res.json({success: true, message: query.title + ' deleted!'});
+            //res.json({success: true, message: query.title + ' deleted!'});
         })
     }
 });
