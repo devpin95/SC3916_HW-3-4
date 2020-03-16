@@ -136,10 +136,10 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     else if ( !query.hasOwnProperty("releasedate") ) {
         res.send({ success: false, message: "Must include movie release date" });
     }
-    else if ( !query.hasOwnProperty("actors") ) {
+    else if ( !query.hasOwnProperty("actor") ) {
         res.send({ success: false, message: "Must include movie actors" });
     }
-    else if ( !query.hasOwnProperty("characters") ) {
+    else if ( !query.hasOwnProperty("character") ) {
         res.send({ success: false, message: "Must include movie characters" });
     }
 
