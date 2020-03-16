@@ -127,19 +127,19 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     // res.json(query);
 
     if ( !query.hasOwnProperty("title") ) {
-        res.send({ success: false, message: "Must include movie title" });
+       return res.send({ success: false, message: "Must include movie title" });
     }
     else if ( !query.hasOwnProperty("genre") ) {
-        res.send({ success: false, message: "Must include movie genre" });
+        return res.send({ success: false, message: "Must include movie genre" });
     }
     else if ( !query.hasOwnProperty("releasedate") ) {
-        res.send({ success: false, message: "Must include movie release date" });
+        return res.send({ success: false, message: "Must include movie release date" });
     }
     else if ( !query.hasOwnProperty("actor") ) {
-        res.send({ success: false, message: "Must include movie actors" });
+        return res.send({ success: false, message: "Must include movie actors" });
     }
     else if ( !query.hasOwnProperty("character") ) {
-        res.send({ success: false, message: "Must include movie characters" });
+        return res.send({ success: false, message: "Must include movie characters" });
     }
 
     var movie = new Movie();
@@ -164,7 +164,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                 return res.send(err);
         }
 
-        res.json({ success: true, message: movie.title + ' Added!' });
+        return res.json({ success: true, message: movie.title + ' Added!' });
     });
 
 }).put('/movies', authJwtController.isAuthenticated, function(req, res) {
@@ -176,28 +176,21 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
         env: process.env.SECRET_KEY
     });
 }).delete('/movies', authJwtController.isAuthenticated, function(req, res) {
-    // res.json({
-    //     status: 200,
-    //     message: "movie deleted",
-    //     headers: req.headers,
-    //     query: Object.keys(req.query).length === 0 ? null : req.query,
-    //     env: process.env.SECRET_KEY
-    // });
     var query = Object.keys(req.query).length === 0 ? null : req.query;
+    
     if ( !query.hasOwnProperty("title") ) {
-        res.send({ success: false, message: "Must include movie title to be deleted" });
-    } else {
+        return res.send({ success: false, message: "Must include movie title to be deleted" });
+    }
+    else {
         Movie.deleteOne({title: query.title}, function(err, json) {
             if (err) {
                 return res.send(err);
-                // // duplicate entry
-                // if (err.code == 11000)
-                //     return res.json({ success: false, message: movie.title + ' is already in the database. '});
-                // else
-                //     return res.send(err);
             }
 
-            res.json({ success: true, message: query.title + ' Deleted!' , result: json});
+            // what should I return if the movie wasnt in the database? 204, 200, or 404?
+            // Should we tell the user that their call was the one to delete the document?
+            // or just that the delete was enacted and the document is no longer present
+            res.json({success: true, message: query.title + ' deleted!'});
         })
     }
 });
