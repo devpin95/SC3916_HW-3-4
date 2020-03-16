@@ -168,16 +168,41 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     });
 
 }).put('/movies', authJwtController.isAuthenticated, function(req, res) {
-    res.json({
-        status: 200,
-        message: "movie updated",
-        headers: req.headers,
-        query: Object.keys(req.query).length === 0 ? null : req.query,
-        env: process.env.SECRET_KEY
-    });
+    var query = Object.keys(req.query).length === 0 ? null : req.query;
+
+    if ( !query.hasOwnProperty("title") ) {
+        return res.send({ success: false, message: "Must include movie title to be deleted" });
+    }
+    else {
+        var diff = {};
+
+        if ( query.hasOwnProperty("releasedate") ) {
+            diff.releasedate = new Date(query.releasedate);
+        }
+        if ( query.hasOwnProperty("genre") ) {
+            diff.genre = query.genre;
+        }
+        if ( query.hasOwnProperty("actor") && query.hasOwnProperty("character") ) {
+            diff.actors = [];
+            for ( let i = 0; i < query.actor.length; ++i ) {
+                var actor = {
+                    name: query.actor[i],
+                    character: query.character[i]
+                };
+                diff.actors.push(actor);
+            }
+        }
+
+        Movie.update({title: query.title}, diff, function( err, json ) {
+            if (err) return res.send(err);
+
+            return res.json({ success: true, message: movie.title + ' Added!', json });
+        });
+    }
+
 }).delete('/movies', authJwtController.isAuthenticated, function(req, res) {
     var query = Object.keys(req.query).length === 0 ? null : req.query;
-    
+
     if ( !query.hasOwnProperty("title") ) {
         return res.send({ success: false, message: "Must include movie title to be deleted" });
     }
