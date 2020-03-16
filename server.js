@@ -148,8 +148,8 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     movie.genre = query.genre;
     movie.releasedate = new Date(query.releasedate);
 
-    for ( let i = 0; i < query.actors.length; ++i ) {
-        movie.actors.push({ actor: query.actors[i], character: query.characters[i] })
+    for ( let i = 0; i < query.actor.length; ++i ) {
+        movie.actors.push({ actor: query.actor[i], character: query.character[i] })
     }
 
     movie.save(function(err) {
