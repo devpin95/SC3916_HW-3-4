@@ -117,13 +117,28 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     }));
 
 }).post('/movies',authJwtController.isAuthenticated, function(req, res) {
-    res.json({
-        status: 200,
-        message: "movie saved",
-        headers: req.headers,
-        query: Object.keys(req.query).length === 0 ? null : req.query,
-        env: process.env.SECRET_KEY
-    });
+    // res.json({
+    //     status: 200,
+    //     message: "movie saved",
+    //     headers: req.headers,
+    //     query: Object.keys(req.query).length === 0 ? null : req.query,
+    //     env: process.env.SECRET_KEY
+    // });
+    var query = Object.keys(req.query).length === 0 ? null : req.query;
+    res.json(query);
+    // if ( !query.hasOwnProperty("title") ) {
+    //     res.send({ success: false, message: "Must include movie title" });
+    // }
+    // else if ( !query.hasOwnProperty("genre") ) {
+    //     res.send({ success: false, message: "Must include movie genre" });
+    // }
+    // else if ( !query.hasOwnProperty("releasedate") ) {
+    //     res.send({ success: false, message: "Must include movie release date" });
+    // }
+    // else if ( !query.hasOwnProperty("actors") ) {
+    //     res.send({ success: false, message: "Must include movie actors" });
+    // }
+
 }).put('/movies', authJwtController.isAuthenticated, function(req, res) {
     res.json({
         status: 200,
