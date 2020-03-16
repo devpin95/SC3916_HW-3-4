@@ -176,13 +176,30 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
         env: process.env.SECRET_KEY
     });
 }).delete('/movies', authJwtController.isAuthenticated, function(req, res) {
-    res.json({
-        status: 200,
-        message: "movie deleted",
-        headers: req.headers,
-        query: Object.keys(req.query).length === 0 ? null : req.query,
-        env: process.env.SECRET_KEY
-    });
+    // res.json({
+    //     status: 200,
+    //     message: "movie deleted",
+    //     headers: req.headers,
+    //     query: Object.keys(req.query).length === 0 ? null : req.query,
+    //     env: process.env.SECRET_KEY
+    // });
+    var query = Object.keys(req.query).length === 0 ? null : req.query;
+    if ( !query.hasOwnProperty("title") ) {
+        res.send({ success: false, message: "Must include movie title to be deleted" });
+    } else {
+        Movie.deleteOne({title: query.title}, function(err) {
+            if (err) {
+                return res.send(err);
+                // // duplicate entry
+                // if (err.code == 11000)
+                //     return res.json({ success: false, message: movie.title + ' is already in the database. '});
+                // else
+                //     return res.send(err);
+            }
+
+            res.json({ success: true, message: query.title + ' Deleted!' });
+        })
+    }
 });
 
 app.use('/', router);
