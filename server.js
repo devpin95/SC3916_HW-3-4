@@ -135,11 +135,11 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     else if ( !query.hasOwnProperty("releasedate") ) {
         return res.send({ success: false, message: "Must include movie release date" });
     }
-    else if ( !query.hasOwnProperty("actor") ) {
-        return res.send({ success: false, message: "Must include movie actors" });
+    else if ( !query.hasOwnProperty("actor") || !query.hasOwnProperty("character") ) {
+        return res.send({ success: false, message: "Must include movie actors and their character names" });
     }
-    else if ( !query.hasOwnProperty("character") ) {
-        return res.send({ success: false, message: "Must include movie characters" });
+    else if ( query.actor.length !== 3 || query.character.length !== 3 ) {
+        return res.send({ success: false, message: "Must include at least 3 actors with their character name" });
     }
 
     var movie = new Movie();
