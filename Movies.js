@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-// var bcrypt = require('bcrypt-nodejs');
 
 mongoose.Promise = global.Promise;
 
@@ -12,7 +11,7 @@ var MovieSchema = new Schema({
     title: {type: String, index: { unique: true }},
     releasedate: { type: Date, required: true, default: Date.now },
     genre: String,
-    actors: [{name: String, character: String}]
+    actors: [ActorSchema]
 });
 
 // return the model
