@@ -4,7 +4,6 @@ var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
 var Movie = require('./Movies');
-var Actor = require('./Actor');
 var cors = require("cors");
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt-nodejs');
@@ -150,9 +149,10 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     movie.releasedate = new Date(query.releasedate);
 
     for ( let i = 0; i < query.actor.length; ++i ) {
-        var actor = new Actor();
-        actor.name = query.actor[i];
-        actor.character = query.character[i];
+        var actor = {
+            name: query.actor[i],
+            character: query.character[i]
+        };
         movie.actors.push(actor);
     }
 
