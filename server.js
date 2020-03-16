@@ -109,12 +109,14 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     // });
     var query = Object.keys(req.query).length === 0 ? null : req.query;
 
-    if ( query.hasOwnProperty("title") ) {
-        Movie.find(function(err, movies) {
-            if (err) res.send(err);
-            // return the users
-            res.json(movies);
-        });
+    if ( query ) {
+        if ( query.hasOwnProperty("title") ) {
+            Movie.find(function (err, movies) {
+                if (err) res.send(err);
+                // return the users
+                res.json(movies);
+            });
+        }
     } else {
         Movie.find({title: query.title}, function(err, movies) {
             if (err) res.send(err);
