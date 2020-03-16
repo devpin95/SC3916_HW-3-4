@@ -221,14 +221,14 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
             }
         }
 
-        Movie.update({title: query.title}, diff, function( err, json ) {
+        Movie.update({title: query.title}, diff, function( err ) {
             if (err) {
                 res.status(500);
                 return res.send(err);
             }
 
             res.status(200);
-            return res.json({ success: true, message: query.title + ' updated!', json });
+            return res.json({ success: true, message: query.title + ' updated!' });
         });
     }
 
