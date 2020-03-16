@@ -127,18 +127,23 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     // res.json(query);
 
     if ( !query.hasOwnProperty("title") ) {
-       return res.send({ success: false, message: "Must include movie title" });
+        res.status(400);
+        return res.send({ success: false, message: "Must include movie title" });
     }
     else if ( !query.hasOwnProperty("genre") ) {
+        res.status(400);
         return res.send({ success: false, message: "Must include movie genre" });
     }
     else if ( !query.hasOwnProperty("releasedate") ) {
+        res.status(400);
         return res.send({ success: false, message: "Must include movie release date" });
     }
     else if ( !query.hasOwnProperty("actor") || !query.hasOwnProperty("character") ) {
+        res.status(400);
         return res.send({ success: false, message: "Must include movie actors and their character names" });
     }
     else if ( query.actor.length !== 3 || query.character.length !== 3 ) {
+        res.status(400);
         return res.send({ success: false, message: "Must include at least 3 actors with their character name" });
     }
 
@@ -158,10 +163,14 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     movie.save(function(err) {
         if (err) {
             // duplicate entry
-            if (err.code == 11000)
-                return res.json({ success: false, message: movie.title + ' is already in the database. '});
-            else
+            if (err.code == 11000) {
+                res.status(409);
+                return res.json({success: false, message: movie.title + ' is already in the database. '});
+            }
+            else {
+                res.status(500);
                 return res.send(err);
+            }
         }
 
         return res.json({ success: true, message: movie.title + ' Added!' });
@@ -171,6 +180,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     var query = Object.keys(req.query).length === 0 ? null : req.query;
 
     if ( !query.hasOwnProperty("title") ) {
+        res.status(400);
         return res.send({ success: false, message: "Must include movie title to be deleted" });
     }
     else {
@@ -194,8 +204,12 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
         }
 
         Movie.update({title: query.title}, diff, function( err, json ) {
-            if (err) return res.send(err);
+            if (err) {
+                res.status(500);
+                return res.send(err);
+            }
 
+            res.status(200);
             return res.json({ success: true, message: query.title + ' updated!', json });
         });
     }
@@ -204,17 +218,20 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     var query = Object.keys(req.query).length === 0 ? null : req.query;
 
     if ( !query.hasOwnProperty("title") ) {
+        res.status(400);
         return res.send({ success: false, message: "Must include movie title to be deleted" });
     }
     else {
         Movie.deleteOne({title: query.title}, function(err, json) {
             if (err) {
+                res.status(500);
                 return res.send(err);
             }
 
             // what should I return if the movie wasnt in the database? 204, 200, or 404?
             // Should we tell the user that their call was the one to delete the document?
             // or just that the delete was enacted and the document is no longer present
+            res.status(204);
             res.json({success: true, message: query.title + ' deleted!'});
         })
     }
