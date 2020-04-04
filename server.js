@@ -120,6 +120,27 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     res.json({success: false, message: query.title + ' could not be found.'});
                 }
                 else {
+                    var json = movies;
+                    var reviews = null;
+
+                    if ( query.hasOwnProperty("reviews") ) {
+                        if ( query.reviews == true ) {
+                            reviews = Movie.aggregate([
+                                {
+                                    $lookup:
+                                        {
+                                            from: "reviews",
+                                            localField: "title",
+                                            foreignField: "movietitle",
+                                            as: "movie_reviews"
+                                        }
+                                }
+                            ])
+                        }
+
+                        movies.reviews = reviews;
+                    }
+
                     res.status(200);
                     res.json(movies);
                 }
@@ -144,55 +165,74 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     var query = Object.keys(req.query).length === 0 ? null : req.query;
     // res.json(query);
 
-    if ( !query.hasOwnProperty("title") ) {
-        res.status(400);
-        return res.send({ success: false, message: "Must include movie title" });
-    }
-    else if ( !query.hasOwnProperty("genre") ) {
-        res.status(400);
-        return res.send({ success: false, message: "Must include movie genre" });
-    }
-    else if ( !query.hasOwnProperty("releasedate") ) {
-        res.status(400);
-        return res.send({ success: false, message: "Must include movie release date" });
-    }
-    else if ( !query.hasOwnProperty("actor") || !query.hasOwnProperty("character") ) {
-        res.status(400);
-        return res.send({ success: false, message: "Must include movie actors and their character names" });
-    }
-    else if ( query.actor.length !== 3 || query.character.length !== 3 ) {
-        res.status(400);
-        return res.send({ success: false, message: "Must include at least 3 actors with their character name" });
-    }
+    if ( query.hasOwnProperty("reviews") ) {
+        if ( !query.hasOwnProperty("title") ) {
+            res.status(400);
+            return res.send({ success: false, message: "Must include movie title" });
+        }
+        else if ( !query.hasOwnProperty("rating") ) {
+            res.status(400);
+            return res.send({ success: false, message: "Must include movie rating" });
+        }
+        else if ( !query.hasOwnProperty("review") ) {
+            res.status(400);
+            return res.send({ success: false, message: "Must include movie review" });
+        }
+        else {
 
-    var movie = new Movie();
-    movie.title = query.title;
-    movie.genre = query.genre;
-    movie.releasedate = new Date(query.releasedate);
-
-    for ( let i = 0; i < query.actor.length; ++i ) {
-        var actor = {
-            name: query.actor[i],
-            character: query.character[i]
-        };
-        movie.actors.push(actor);
+        }
     }
-
-    movie.save(function(err) {
-        if (err) {
-            // duplicate entry
-            if (err.code == 11000) {
-                res.status(409);
-                return res.json({success: false, message: movie.title + ' is already in the database. '});
-            }
-            else {
-                res.status(500);
-                return res.send(err);
-            }
+    else {
+        if ( !query.hasOwnProperty("title") ) {
+            res.status(400);
+            return res.send({ success: false, message: "Must include movie title" });
+        }
+        else if ( !query.hasOwnProperty("genre") ) {
+            res.status(400);
+            return res.send({ success: false, message: "Must include movie genre" });
+        }
+        else if ( !query.hasOwnProperty("releasedate") ) {
+            res.status(400);
+            return res.send({ success: false, message: "Must include movie release date" });
+        }
+        else if ( !query.hasOwnProperty("actor") || !query.hasOwnProperty("character") ) {
+            res.status(400);
+            return res.send({ success: false, message: "Must include movie actors and their character names" });
+        }
+        else if ( query.actor.length !== 3 || query.character.length !== 3 ) {
+            res.status(400);
+            return res.send({ success: false, message: "Must include at least 3 actors with their character name" });
         }
 
-        return res.json({ success: true, message: movie.title + ' Added!' });
-    });
+        var movie = new Movie();
+        movie.title = query.title;
+        movie.genre = query.genre;
+        movie.releasedate = new Date(query.releasedate);
+
+        for ( let i = 0; i < query.actor.length; ++i ) {
+            var actor = {
+                name: query.actor[i],
+                character: query.character[i]
+            };
+            movie.actors.push(actor);
+        }
+
+        movie.save(function(err) {
+            if (err) {
+                // duplicate entry
+                if (err.code == 11000) {
+                    res.status(409);
+                    return res.json({success: false, message: movie.title + ' is already in the database. '});
+                }
+                else {
+                    res.status(500);
+                    return res.send(err);
+                }
+            }
+
+            return res.json({ success: true, message: movie.title + ' Added!' });
+        });
+    }
 
 }).put('/movies', authJwtController.isAuthenticated, function(req, res) {
     var query = Object.keys(req.query).length === 0 ? null : req.query;
