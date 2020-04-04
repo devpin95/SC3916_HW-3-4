@@ -197,7 +197,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     review.save(function(err) {
                         if (err) {
                             res.status(500);
-                            return res.send(err);
+                            return res.send({error: err, review: review, body: req.body});
                         }
                         return res.json({ success: true, message: 'Review added!', body: req.body });
                     })
