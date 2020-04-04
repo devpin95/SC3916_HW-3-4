@@ -186,7 +186,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                 // return the users
                 if ( movies.length === 0 ) {
                     res.status(404);
-                    res.json({success: false, message: query.title + ' could not be found.'});
+                    res.json({success: false, message: query.title + ' could not be found.', body: req.body});
                 } else {
                     var review = new Review();
                     review.title = query.title;
@@ -199,7 +199,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                             res.status(500);
                             return res.send(err);
                         }
-                        return res.json({ success: true, message: 'Review added!' });
+                        return res.json({ success: true, message: 'Review added!', body: req.body });
                     })
                 }
             });
