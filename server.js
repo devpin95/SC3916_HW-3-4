@@ -188,17 +188,17 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     res.status(404);
                     res.json({success: false, message: req.body.title + ' could not be found.', body: req.body});
                 } else {
+                    let review = new Review();
+                    review.title = req.body.title;
+                    review.username = req.body.username;
+                    review.review = req.body.review;
+                    review.rating = req.body.rating;
+
                     review.save(function(err) {
                         if (err) {
                             res.status(500);
-                            return res.send({error: err, review: review, body: req.body});
+                            return res.send(err);
                         }
-
-                        let review = new Review();
-                        review.title = req.body.title;
-                        review.username = req.body.username;
-                        review.review = req.body.review;
-                        review.rating = req.body.rating;
                         return res.json({ success: true, message: 'Review added!', body: req.body });
                     })
                 }
