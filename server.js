@@ -180,12 +180,6 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
             return res.send({ success: false, message: "Must include movie review" });
         }
         else {
-            var review = new Review();
-            review.title = query.title;
-            review.username = query.username;
-            review.review = query.review;
-            review.rating = query.rating;
-            
             Movie.findOne({title: req.body.title}, function (err, movies) {
                 if (err) res.send(err);
 
@@ -199,6 +193,12 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                             res.status(500);
                             return res.send({error: err, review: review, body: req.body});
                         }
+
+                        let review = new Review();
+                        review.title = req.body.title;
+                        review.username = req.body.username;
+                        review.review = req.body.review;
+                        review.rating = req.body.rating;
                         return res.json({ success: true, message: 'Review added!', body: req.body });
                     })
                 }
