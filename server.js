@@ -167,26 +167,26 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     // res.json(query);
 
     if ( query.hasOwnProperty("reviews") ) {
-        if ( !query.hasOwnProperty("title") ) {
+        if ( !req.body.hasOwnProperty("title") ) {
             res.status(400);
             return res.send({ success: false, message: "Must include movie title" });
         }
-        else if ( !query.hasOwnProperty("rating") ) {
+        else if ( !req.body.hasOwnProperty("rating") ) {
             res.status(400);
             return res.send({ success: false, message: "Must include movie rating" });
         }
-        else if ( !query.hasOwnProperty("review") ) {
+        else if ( !req.body.hasOwnProperty("review") ) {
             res.status(400);
             return res.send({ success: false, message: "Must include movie review" });
         }
         else {
-            Movie.findone({title: query.title}, function (err, movies) {
+            Movie.findone({title: req.body.title}, function (err, movies) {
                 if (err) res.send(err);
 
                 // return the users
                 if ( movies.length === 0 ) {
                     res.status(404);
-                    res.json({success: false, message: query.title + ' could not be found.', body: req.body});
+                    res.json({success: false, message: req.body.title + ' could not be found.', body: req.body});
                 } else {
                     var review = new Review();
                     review.title = query.title;
