@@ -4,6 +4,7 @@ var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
 var Movie = require('./Movies');
+var Review = require('./Review');
 var cors = require("cors");
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt-nodejs');
@@ -179,7 +180,29 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
             return res.send({ success: false, message: "Must include movie review" });
         }
         else {
+            Movie.findone({title: query.title}, function (err, movies) {
+                if (err) res.send(err);
 
+                // return the users
+                if ( movies.length === 0 ) {
+                    res.status(404);
+                    res.json({success: false, message: query.title + ' could not be found.'});
+                } else {
+                    var review = new Review();
+                    review.title = query.title;
+                    review.username = query.username;
+                    review.review = query.review;
+                    review.rating = query.rating;
+
+                    review.save(function(err) {
+                        if (err) {
+                            res.status(500);
+                            return res.send(err);
+                        }
+                        return res.json({ success: true, message: 'Review added!' });
+                    })
+                }
+            });
         }
     }
     else {
