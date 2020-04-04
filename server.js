@@ -184,7 +184,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                 if (err) res.send(err);
 
                 // return the users
-                if ( movies.length === 0 ) {
+                if ( movies === null ) {
                     res.status(404);
                     res.json({success: false, message: req.body.title + ' could not be found.', body: req.body});
                 } else {
