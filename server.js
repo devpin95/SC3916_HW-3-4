@@ -131,9 +131,6 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                                     $lookup:
                                         {
                                             from: "reviews",
-                                            pipeline: [
-                                                {$match: {title: query.title}}
-                                            ],
                                             localField: "title",
                                             foreignField: "movietitle",
                                             as: "movie_reviews"
