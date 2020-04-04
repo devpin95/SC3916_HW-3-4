@@ -180,7 +180,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
             return res.send({ success: false, message: "Must include movie review" });
         }
         else {
-            Movie.findone({title: req.body.title}, function (err, movies) {
+            Movie.findOne({title: req.body.title}, function (err, movies) {
                 if (err) res.send(err);
 
                 // return the users
