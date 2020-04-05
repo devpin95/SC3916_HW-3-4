@@ -120,7 +120,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     res.json({success: false, message: query.title + ' could not be found.'});
                 }
                 else {
-                    let reviews = null;
+                    let reviews = "HELLO";
                     if ( query.hasOwnProperty("reviews") ) {
                         if ( query.reviews == true ) {
                             reviews = Movie.aggregate([
