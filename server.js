@@ -142,7 +142,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     // return the users
                     if ( movies == null ) {
                         res.status(404);
-                        res.json({message: query.title + " not found"})
+                        res.json({success: false, message: query.title + " not found"})
                     }
                     else {
                         res.status(200);
@@ -179,13 +179,6 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     }
 
 }).post('/movies', authJwtController.isAuthenticated, function(req, res) {
-    // res.json({
-    //     status: 200,
-    //     message: "movie saved",
-    //     headers: req.headers,
-    //     query: Object.keys(req.query).length === 0 ? null : req.query,
-    //     env: process.env.SECRET_KEY
-    // });
     var query = Object.keys(req.query).length === 0 ? null : req.query;
     // res.json(query);
 
