@@ -121,26 +121,11 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                 }
                 else {
                     if ( query.hasOwnProperty("reviews") ) {
-                        if ( query.reviews == true ) {
-                            Movie.aggregate([
-                                { "$match": { "title": query.title } },
-                                {
-                                    $lookup:
-                                        {
-                                            from: "reviews",
-                                            localField: "title",
-                                            foreignField: "title",
-                                            as: "movie_reviews"
-                                        }
-                                }
-                            ]).exec(function(err, results) {
-                                movies.reviews = results;
-                            })
-                        }
+                        movies.reviews = "HEKKIWasdfasdf";
                     }
 
                     res.status(200);
-                    return res.send(movies);
+                    res.send(movies);
                 }
             });
         }
