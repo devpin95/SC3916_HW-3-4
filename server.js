@@ -126,7 +126,6 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     if ( query.hasOwnProperty("reviews") ) {
                         if ( query.reviews == true ) {
                             reviews = Movie.aggregate([
-                                {title: query.title},
                                 {
                                     $lookup:
                                         {
@@ -143,7 +142,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     }
 
                     res.status(200);
-                    res.json(movies);
+                    return res.send(movies);
                 }
             });
         }
