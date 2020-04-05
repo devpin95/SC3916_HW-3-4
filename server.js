@@ -112,9 +112,10 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
 
     if ( query !== null ) {
         if ( query.hasOwnProperty("title") ) {
-            Movie.find({title: query.title}, function (err, movies) {
+            Movie.findOne({title: query.title}, function (err, movies) {
                 if (err) res.send(err);
 
+                movies.query = query;
                 if ( movies === null ) {
                     res.status(404);
                     res.json({success: false, message: query.title + ' could not be found.'});
