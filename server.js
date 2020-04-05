@@ -112,54 +112,34 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
 
     if ( query ) {
         if ( query.hasOwnProperty("title") ) {
-            Movie.aggregate([
-                {$match: {title: query.title}},
-                {
-                    $lookup:
+            if ( query.hasOwnProperty("reviews") ) {
+                if ( query.reviews == true ) {
+                    Movie.aggregate([
+                        {$match: {title: query.title}},
                         {
-                            from: "reviews",
-                            localField: "title",
-                            foreignField: "title",
-                            as: "movie_reviews"
+                            $lookup:
+                                {
+                                    from: "reviews",
+                                    localField: "title",
+                                    foreignField: "title",
+                                    as: "movie_reviews"
+                                }
                         }
-                }
-            ], function(err, results){
-                if (err) res.send(err);
+                    ], function(err, results){
+                        if (err) res.send(err);
 
-                res.status(200);
-                return res.send({movies: results, query: query});
-            });
-            // Movie.findOne({title: query.title}, function (err, movies) {
-            //     if (err) res.send(err);
-            //
-            //     if ( movies === null ) {
-            //         res.status(404);
-            //         res.json({success: false, message: query.title + ' could not be found.'});
-            //     }
-            //     else {
-            //         let reviews = "HELLO";
-            //         if ( query.hasOwnProperty("reviews") ) {
-            //             if ( query.reviews == true ) {
-            //                 reviews = Movie.aggregate([
-            //                     {
-            //                         $lookup:
-            //                             {
-            //                                 from: "reviews",
-            //                                 localField: "title",
-            //                                 foreignField: "title",
-            //                                 as: "movie_reviews"
-            //                             }
-            //                     }
-            //                 ], function(err, results){
-            //                     reviews = results;
-            //                 });
-            //             }
-            //         }
-            //
-            //         res.status(200);
-            //         return res.send({movies: movies, reviews: reviews, query: query});
-            //     }
-            // });
+                        res.status(200);
+                        return res.send(results);
+                    });
+                }
+            }
+            else {
+                Movie.findOne({title: query.title}, function(err, movies) {
+                    if (err) res.send(err);
+                    // return the users
+                    res.json(movies);
+                });
+            }
         }
     } else {
         Movie.find(function(err, movies) {
