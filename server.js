@@ -113,7 +113,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     if ( query ) {
         if ( query.hasOwnProperty("title") ) {
             if ( query.hasOwnProperty("reviews") ) {
-                if ( query.reviews == true ) {
+                if ( query.reviews === true ) {
                     Movie.aggregate([
                         {$match: {title: query.title}},
                         {
