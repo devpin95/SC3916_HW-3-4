@@ -115,17 +115,15 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
             Movie.findOne({title: query.title}, function (err, movies) {
                 if (err) res.send(err);
 
-                // return the users
                 if ( movies === null ) {
                     res.status(404);
                     res.json({success: false, message: query.title + ' could not be found.'});
                 }
                 else {
-                    let reviews = null;
-
                     if ( query.hasOwnProperty("reviews") ) {
                         if ( query.reviews == true ) {
-                            reviews = Movie.aggregate([
+                            Movie.aggregate([
+                                { "$match": { "title": query.title } },
                                 {
                                     $lookup:
                                         {
@@ -135,7 +133,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                                             as: "movie_reviews"
                                         }
                                 }
-                            ], function(err, results) {
+                            ]).exec(function(err, results) {
                                 movies.reviews = results;
                             })
                         }
@@ -147,7 +145,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
             });
         }
     } else {
-        Movie.find(function(err, movies) {
+        Movie.findOne(function(err, movies) {
             if (err) res.send(err);
             // return the users
             res.json(movies);
