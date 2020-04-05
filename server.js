@@ -126,11 +126,11 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     if ( query.hasOwnProperty("reviews") ) {
                         if ( query.reviews == true ) {
                             reviews = Movie.aggregate([
+                                {title: query.title},
                                 {
                                     $lookup:
                                         {
                                             from: "reviews",
-                                            $match: {title: req.body.title},
                                             localField: "title",
                                             foreignField: "title",
                                             as: "movie_reviews"
