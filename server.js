@@ -135,7 +135,14 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                 Movie.findOne({title: query.title}, function(err, movies) {
                     if (err) res.send(err);
                     // return the users
-                    res.json(movies);
+                    if ( movies == null ) {
+                        res.status(404);
+                        res.json({message: query.title + " not found"})
+                    }
+                    else {
+                        res.status(200)
+                        res.json(movies);
+                    }
                 });
             }
         }
