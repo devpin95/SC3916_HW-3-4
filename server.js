@@ -135,10 +135,10 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                                             as: "movie_reviews"
                                         }
                                 }
-                            ])
+                            ], function(err, results) {
+                                movies.reviews = results;
+                            })
                         }
-
-                        movies.reviews = reviews;
                     }
 
                     res.status(200);
