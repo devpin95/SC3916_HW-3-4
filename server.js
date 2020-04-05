@@ -126,7 +126,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     }
 
                     res.status(200);
-                    res.send(movies);
+                    res.send({movies: movies, query: query});
                 }
             });
         }
