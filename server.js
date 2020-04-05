@@ -140,10 +140,29 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                         res.json({message: query.title + " not found"})
                     }
                     else {
-                        res.status(200)
+                        res.status(200);
                         res.json(movies);
                     }
                 });
+            }
+        } else {
+            if ( query.hasOwnProperty("reviews") ) {
+                Movie.aggregate([
+                    {
+                        $lookup:
+                            {
+                                from: "reviews",
+                                localField: "title",
+                                foreignField: "title",
+                                as: "movie_reviews"
+                            }
+                    }
+                    ], function(err, results){
+                        if (err) res.send(err);
+
+                        res.status(200);
+                        return res.send(results);
+                    });
             }
         }
     } else {
