@@ -112,7 +112,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
 
     if ( query ) {
         if ( query.hasOwnProperty("title") ) {
-            Movie.find({title: query.title}, function (err, movies) {
+            Movie.findOne({title: query.title}, function (err, movies) {
                 if (err) res.send(err);
 
                 // return the users
@@ -130,6 +130,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                                     $lookup:
                                         {
                                             from: "reviews",
+                                            $match: {title: req.body.title},
                                             localField: "title",
                                             foreignField: "title",
                                             as: "movie_reviews"
