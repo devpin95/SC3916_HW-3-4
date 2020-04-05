@@ -127,8 +127,13 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                 ], function(err, results){
                     if (err) res.send(err);
 
-                    res.status(200);
-                    return res.send(results);
+                    if ( results.length === 0 ) {
+                        res.status(404);
+                        return res.send({success: false, message: query.title + " not found"});
+                    } else {
+                        res.status(200);
+                        return res.send(results);
+                    }
                 });
             }
             else {
