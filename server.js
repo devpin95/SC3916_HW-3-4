@@ -113,25 +113,23 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     if ( query ) {
         if ( query.hasOwnProperty("title") ) {
             if ( query.hasOwnProperty("reviews") ) {
-                if ( query.reviews === true ) {
-                    Movie.aggregate([
-                        {$match: {title: query.title}},
-                        {
-                            $lookup:
-                                {
-                                    from: "reviews",
-                                    localField: "title",
-                                    foreignField: "title",
-                                    as: "movie_reviews"
-                                }
-                        }
-                    ], function(err, results){
-                        if (err) res.send(err);
+                Movie.aggregate([
+                    {$match: {title: query.title}},
+                    {
+                        $lookup:
+                            {
+                                from: "reviews",
+                                localField: "title",
+                                foreignField: "title",
+                                as: "movie_reviews"
+                            }
+                    }
+                ], function(err, results){
+                    if (err) res.send(err);
 
-                        res.status(200);
-                        return res.send(results);
-                    });
-                }
+                    res.status(200);
+                    return res.send(results);
+                });
             }
             else {
                 Movie.findOne({title: query.title}, function(err, movies) {
