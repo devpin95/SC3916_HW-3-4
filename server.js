@@ -123,8 +123,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     let reviews = "HELLO";
                     if ( query.hasOwnProperty("reviews") ) {
                         if ( query.reviews == true ) {
-                            reviews = Movie.aggregate([
-                                { $match: { "title": query.title } },
+                            reviews = movies.aggregate([
                                 {
                                     $lookup:
                                         {
