@@ -110,23 +110,36 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
     // });
     var query = Object.keys(req.query).length === 0 ? null : req.query;
 
-    if ( query !== null ) {
+    if ( query ) {
         if ( query.hasOwnProperty("title") ) {
             Movie.findOne({title: query.title}, function (err, movies) {
                 if (err) res.send(err);
 
-                movies.query = query;
                 if ( movies === null ) {
                     res.status(404);
                     res.json({success: false, message: query.title + ' could not be found.'});
                 }
                 else {
+                    let reviews = null;
                     if ( query.hasOwnProperty("reviews") ) {
-                        movies.reviews = "HEKKIWasdfasdf";
+                        if ( query.reviews == true ) {
+                            reviews = Movie.aggregate([
+                                { "$match": { "title": query.title } },
+                                {
+                                    $lookup:
+                                        {
+                                            from: "reviews",
+                                            localField: "title",
+                                            foreignField: "title",
+                                            as: "movie_reviews"
+                                        }
+                                }
+                            ]);
+                        }
                     }
 
                     res.status(200);
-                    res.send({movies: movies, query: query});
+                    return res.send({movies: movies, reviews: reviews, query: query});
                 }
             });
         }
