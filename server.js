@@ -121,7 +121,7 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                     res.json({success: false, message: query.title + ' could not be found.'});
                 }
                 else {
-                    var json = movies;
+                    var json = {movies: movies};
                     var reviews = null;
 
                     if ( query.hasOwnProperty("reviews") ) {
@@ -139,11 +139,11 @@ router.get('/movies', authJwtController.isAuthenticated, function(req, res) {
                             ])
                         }
 
-                        movies.reviews = reviews;
+                        json.reviews = reviews;
                     }
 
                     res.status(200);
-                    res.json(movies);
+                    res.json(json);
                 }
             });
         }
