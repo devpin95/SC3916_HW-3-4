@@ -12,7 +12,7 @@ var ReviewSchema = new Schema({
     title: {type: String, required: true},
     username: {type: String, required: true},
     review: {type: String, required: true},
-    rating: {type: Number, required: true}
+    rating: {type: Number, required: true, min: 0, max: 5}
 });
 
 // return the model
